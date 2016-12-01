@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset='utf-8'>
+    <script src="vendor/jquery/dist/jquery.min.js"></script>
+  </head>
+  <body>
+
+    <script src="dist/mi-model.js"></script>
+
+    <script>
+
+      $.get( "json/EBI-9082861.json", function( data ) {
+        var complex = new MIModel.complex(data);
+        console.log(complex);
+      });
+
+    </script>
+
+  </body>
+</html>

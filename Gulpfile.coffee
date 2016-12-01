@@ -5,31 +5,44 @@ browserify = require 'browserify'
 browserSync = require('browser-sync').create()
 fs = require 'fs'
 watch = require 'gulp-watch'
-livereload = require 'gulp-livereload'
+minify = require 'gulp-minify'
 
 
-gulp.task 'browser-sync', ->
-	browserSync.init
-		server: baseDir: "./"
-
-
+swallowError = (error) ->
+  console.log "ERROR", error.toString
+  @emit 'end'
 
 gulp.task 'coffee', ->
   gulp.src './src/**/*.coffee'
     .pipe coffee bare: true
+    .on 'error', swallowError
     .pipe gulp.dest './js/'
 
-gulp.task 'browserify', ->
-	browserify 'js/entry.js', {debug: true, standalone: 'MICircle'}
+gulp.task 'browserify', ['coffee'], ->
+	browserify 'js/main.js', {debug: true, standalone: 'MIModel'}
 	.bundle()
-	.pipe fs.createWriteStream 'dist/micircle.js'
+	.pipe fs.createWriteStream 'resources/public/dist/mi-model.js'
 
-gulp.task 'stream', ->
-	gulp.watch './src/**/*.coffee', ['coffee', 'browserify']
+gulp.task 'watch-src', ['serve'], ->
+  gulp.watch("./src/**/*", ['coffee', 'browserify'])
 
-gulp.task 'watch', ['browserify'], ->
-  watcher = gulp.watch './dist/**/*'
 
-gulp.task 'refresh', ['browserify'], browserSync.reload
+gulp.task 'dist-watch', ['browserify'], (done) ->
+  browserSync.reload()
+  done()
 
-gulp.task 'default', ['stream', 'coffee', 'browserify', 'browser-sync']
+gulp.task 'compress', ->
+  gulp.src "./resources/public/dist/mi-model.js"
+    .pipe minify
+      ext:
+          src: ".js",
+          min: ".min.js"
+          ignoreFiles: [".min.js"]
+    .pipe gulp.dest './resources/public/dist'
+
+gulp.task 'serve', ['browserify'], ->
+  gulp.watch("resources/public/dist/*.js", ['dist-watch'])
+	browserSync.init
+		server: "./resources/public"
+
+gulp.task 'default', ['coffee', 'browserify', 'watch-src', 'serve']

@@ -1,0 +1,20 @@
+{
+  "name": "MI-model",
+  "description": "",
+  "main": "main.js",
+  "authors": [
+    "Joshua Heimbach <joshkh@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/joshkh/circle-coffee",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "jquery": "^3.1.1"
+  }
+}

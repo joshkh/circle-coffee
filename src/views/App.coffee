@@ -1,14 +1,13 @@
-Backbone = require 'backbone'
+ZBackbone = require 'backbone'
 
 class SVG extends Backbone.View
 
   el: 'body'
 
-  initialize: -> console.log "Created View"
-
   constructor: (el) -> @setElement el
 
   render: ->
-    @$el.html "Loaded"
+    @$el.html "Loaded into " + @$el
+    @
 
 module.exports = SVG
